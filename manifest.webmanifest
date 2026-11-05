@@ -3,8 +3,8 @@
   "short_name": "하루",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#F7F6F1",
-  "theme_color": "#496457",
+  "background_color": "#102A22",
+  "theme_color": "#102A22",
   "lang": "ko",
   "icons": [
     {

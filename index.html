@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#496457">
+  <meta name="theme-color" content="#102A22">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="하루">
@@ -11,7 +11,8 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="stylesheet" href="./styles.css">
-  <title>하루 - 나의 일정 비서</title>
+  <script src="./lunar-data.js"></script>
+  <title>하루 1.3 - 나의 일정 비서</title>
 </head>
 <body>
   <main class="app-shell">
@@ -22,7 +23,7 @@
       </div>
       <p class="eyebrow" id="weekdayLabel">TODAY</p>
       <h1 id="todayLabel">오늘의 하루</h1>
-      <p class="hero-sub">차분하게, 하나씩 시작해 보세요.</p>
+      <p class="hero-sub">오늘을 더 선명하게, 나만의 리듬으로.</p>
       <div class="stats">
         <div><strong id="scheduleCount">0</strong><span>오늘의 일정</span></div>
         <div><strong id="todoCount">0</strong><span>남은 할 일</span></div>
@@ -31,6 +32,7 @@
     </header>
 
     <section class="content">
+      <div class="home-view" id="homeView">
       <div class="section-heading">
         <h2>오늘의 일정</h2>
         <button class="text-button" id="showAllBtn">전체 보기 <span>→</span></button>
@@ -45,20 +47,48 @@
 
       <div class="section-heading tasks-heading">
         <h2>오늘 할 일</h2>
-        <button class="text-button" id="addTaskBtn">+ 할 일 추가</button>
       </div>
       <div class="task-card" id="taskList"></div>
 
-      <button class="primary-button" id="addScheduleBtn"><span class="plus">＋</span> 새 일정 추가</button>
       <button class="voice-button" id="voiceBtn"><span>🎙</span> 말로 일정 입력</button>
       <p class="voice-note" id="voiceNote">예: “내일 오후 3시 치과 예약”처럼 말해 보세요.</p>
+      </div>
+
+      <section class="calendar-view hidden" id="calendarView" aria-labelledby="calendarMonthLabel">
+        <div class="calendar-toolbar">
+          <button class="date-arrow" id="prevMonthBtn" type="button" aria-label="이전 달">‹</button>
+          <div class="calendar-month-heading">
+            <p class="eyebrow dark">MY CALENDAR</p>
+            <h2 id="calendarMonthLabel">이번 달</h2>
+          </div>
+          <button class="date-arrow" id="nextMonthBtn" type="button" aria-label="다음 달">›</button>
+        </div>
+        <div class="calendar-legend" aria-label="달력 색상 안내"><span><i class="legend-sunday"></i>일요일·공휴일</span><span><i class="legend-saturday"></i>토요일</span><span><i class="legend-weekday"></i>평일</span></div>
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="월간 일정 달력"></div>
+        <section class="calendar-day-detail" aria-live="polite">
+          <div class="section-heading">
+            <h3 id="calendarDayTitle">선택한 날짜</h3>
+            <span class="calendar-day-count" id="calendarDayCount">0개 일정</span>
+          </div>
+          <div class="calendar-day-list" id="calendarDayList"></div>
+        </section>
+      </section>
     </section>
 
+    <div class="action-dock" id="actionDock" aria-label="빠른 추가">
+      <button class="primary-button dock-schedule-button" id="addScheduleBtn" type="button"><span class="plus">＋</span> 새 일정</button>
+      <button class="dock-task-button" id="addTaskBtn" type="button"><span class="plus">＋</span> 할 일 추가</button>
+    </div>
+
     <nav class="bottom-nav" aria-label="주 메뉴">
-      <button class="nav-item active" data-tab="schedule"><span>▦</span>일정</button>
-      <button class="nav-item" data-tab="tasks"><span>✓</span>할 일</button>
-      <button class="nav-item" data-tab="voice"><span>◉</span>음성</button>
-      <button class="nav-item" data-tab="settings"><span>⚙</span>설정</button>
+      <button class="nav-item active" data-tab="schedule" type="button"><span>▦</span>일정</button>
+      <button class="nav-item" data-tab="tasks" type="button"><span>✓</span>할 일</button>
+      <button class="nav-item" data-tab="calendar" type="button"><span>▦</span>캘린더</button>
+      <button class="nav-item" data-tab="voice" type="button"><span>◉</span>음성</button>
+      <button class="nav-item" data-tab="settings" type="button"><span>⚙</span>설정</button>
     </nav>
   </main>
 

@@ -15,6 +15,8 @@ const load = (key, fallback) => {
 let events = load(STORAGE_KEY, load("haru.events.v2", load("haru.events.v1", [])));
 let tasks = load(TASK_KEY, load("haru.tasks.v2", load("haru.tasks.v1", [])));
 let selectedDate = todayISO();
+let calendarMonth = parseISO(todayISO());
+calendarMonth.setDate(1);
 let editingEventId = null;
 let editingTaskId = null;
 let toastTimer = null;
@@ -63,6 +65,90 @@ function parseISO(iso) {
 }
 function fmtDate(iso, options = {month:"long",day:"numeric",weekday:"long"}) {
   return parseISO(iso).toLocaleDateString("ko-KR", options);
+}
+
+// KARI 기준 한국 음양력 변환 데이터(오프라인, 2020~2050)
+function lunarDateInfo(iso) {
+  const table = window.HARU_LUNAR_DATA;
+  if (!table || iso < table.start || iso > table.end) return null;
+  const [y,m,d] = iso.split("-").map(Number);
+  const start = new Date(2020,0,1,12);
+  const target = new Date(y,m-1,d,12);
+  const index = Math.round((target-start)/86400000);
+  const row = table.days[index];
+  return row ? {year:row[0],month:row[1],day:row[2],isLeap:row[3] === 1} : null;
+}
+function lunarLabel(iso) {
+  const lunar = lunarDateInfo(iso);
+  if (!lunar) return "음력 정보 없음";
+  return `음 ${lunar.isLeap ? "윤" : ""}${lunar.month}.${lunar.day}`;
+}
+function addDaysISO(iso, amount) {
+  const date = parseISO(iso); date.setDate(date.getDate()+amount); return isoDate(date);
+}
+function holidayMapForYear(year) {
+  const holidays = new Map();
+  const put = (date, name, type="public") => { if (!holidays.has(date)) holidays.set(date,{name,type}); };
+  const fixed = [
+    [`${year}-01-01`,"신정"], [`${year}-03-01`,"삼일절"],
+    [`${year}-05-05`,"어린이날"], [`${year}-06-06`,"현충일"],
+    [`${year}-08-15`,"광복절"], [`${year}-10-03`,"개천절"],
+    [`${year}-10-09`,"한글날"], [`${year}-12-25`,"성탄절"]
+  ];
+  if (year >= 2026) fixed.push([`${year}-05-01`,"노동절"],[`${year}-07-17`,"제헌절"]);
+  if (year === 2026) fixed.push(["2026-06-03","전국동시지방선거일"]);
+  fixed.forEach(([date,name]) => put(date,name));
+  const lunarEvents = [
+    {month:1,day:1,offsets:[-1,0,1],name:"설날"},
+    {month:1,day:15,offsets:[0],name:"정월대보름"},
+    {month:4,day:8,offsets:[0],name:"부처님오신날"},
+    {month:8,day:15,offsets:[-1,0,1],name:"추석"}
+  ];
+  const yearStart = `${year}-01-01`, yearEnd = `${year}-12-31`;
+  const scanStart = `${year-1}-12-20`, scanEnd = `${year+1}-01-10`;
+  let cursor = scanStart;
+  while (cursor <= scanEnd) {
+    const lunar = lunarDateInfo(cursor);
+    if (lunar && !lunar.isLeap) {
+      const match = lunarEvents.find(item => item.month === lunar.month && item.day === lunar.day);
+      if (match) match.offsets.forEach(offset => {
+        const date = addDaysISO(cursor,offset);
+        if (date >= yearStart && date <= yearEnd) put(date, match.name === "설날" ? "설날 연휴" : match.name === "추석" ? "추석 연휴" : match.name, match.name === "정월대보름" ? "observance" : "public");
+      });
+    }
+    cursor = addDaysISO(cursor,1);
+  }
+  // 대체공휴일: 법정 대체공휴일 대상 명절·기념일이 일요일 또는 다른 공휴일과 겹치면 다음 평일로 이동
+  const substituteEligible = new Set(["삼일절","어린이날","광복절","개천절","한글날","성탄절","부처님오신날","설날 연휴","추석 연휴","노동절","제헌절"]);
+  const weekendSubstitute = new Set(["삼일절","어린이날","광복절","개천절","한글날","노동절","제헌절"]);
+  const baseEntries = [...holidays.entries()];
+  for (const [date, info] of baseEntries) {
+    if (!substituteEligible.has(info.name)) continue;
+    const day = parseISO(date).getDay();
+    const collision = weekendSubstitute.has(info.name) ? (day === 0 || day === 6) : day === 0;
+    if (!collision) continue;
+    let lastHolidayDate = date;
+    if (info.name === "설날 연휴" || info.name === "추석 연휴") {
+      let nextHolidayDate = addDaysISO(lastHolidayDate,1);
+      while (holidays.has(nextHolidayDate) && holidays.get(nextHolidayDate).name === info.name) { lastHolidayDate = nextHolidayDate; nextHolidayDate = addDaysISO(lastHolidayDate,1); }
+    }
+    let candidate = addDaysISO(lastHolidayDate,1);
+    while (parseISO(candidate).getDay() === 0 || parseISO(candidate).getDay() === 6 || holidays.has(candidate)) candidate = addDaysISO(candidate,1);
+    if (candidate >= yearStart && candidate <= yearEnd) put(candidate,"대체공휴일");
+  }
+  return holidays;
+}
+const holidayCache = new Map();
+function holidayInfo(iso) {
+  const year = Number(iso.slice(0,4));
+  if (!holidayCache.has(year)) holidayCache.set(year,holidayMapForYear(year));
+  return holidayCache.get(year).get(iso) || null;
+}
+function dayColorClass(iso) {
+  const day = parseISO(iso).getDay();
+  if ((holidayInfo(iso)?.type === "public") || day === 0) return "holiday-day";
+  if (day === 6) return "saturday-day";
+  return "";
 }
 function reminderFlags(event) {
   if (event.reminderFlags && typeof event.reminderFlags === "object") {
@@ -167,7 +253,7 @@ function eventsForDate(date) {
 }
 function render() {
   $("selectedDate").value = selectedDate;
-  $("weekdayLabel").textContent = fmtDate(selectedDate, {weekday:"long",month:"long",day:"numeric"});
+  $("weekdayLabel").textContent = `${fmtDate(selectedDate, {weekday:"long",month:"long",day:"numeric"})} · ${lunarLabel(selectedDate)}`;
   $("todayLabel").textContent = selectedDate === todayISO() ? "오늘의 하루" : fmtDate(selectedDate);
   const dayEvents = eventsForDate(selectedDate);
   const dayTasks = tasks.filter(task => task.date === selectedDate);
@@ -192,6 +278,68 @@ function render() {
       <button class="task-title-button" data-edit-task="${esc(task.id)}">${esc(task.title)}</button>
       <button class="task-more" data-edit-task="${esc(task.id)}" aria-label="할 일 수정">···</button>
     </div>`).join("") : `<div class="empty">등록된 할 일이 없어요.<br>오늘 할 일을 하나 추가해 볼까요?</div>`;
+  renderCalendar();
+}
+function isoDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+function renderCalendar() {
+  const year = calendarMonth.getFullYear();
+  const month = calendarMonth.getMonth();
+  $("calendarMonthLabel").textContent = `${year}년 ${month+1}월`;
+  const firstDay = new Date(year, month, 1, 12);
+  const gridStart = new Date(year, month, 1-firstDay.getDay(), 12);
+  const cells = [];
+  for (let index = 0; index < 42; index++) {
+    const date = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate()+index, 12);
+    const iso = isoDate(date);
+    const dayEvents = eventsForDate(iso);
+    const visibleEvents = dayEvents.slice(0,2);
+    const lunar = lunarDateInfo(iso);
+    const holiday = holidayInfo(iso);
+    const colorClass = dayColorClass(iso);
+    const classes = [
+      "calendar-day", colorClass,
+      date.getMonth() !== month ? "outside-month" : "",
+      iso === selectedDate ? "selected" : "",
+      iso === todayISO() ? "today" : ""
+    ].filter(Boolean).join(" ");
+    const lunarText = lunar ? `음 ${lunar.isLeap ? "윤" : ""}${lunar.month}.${lunar.day}` : "";
+    const label = `${fmtDate(iso,{year:"numeric",month:"long",day:"numeric",weekday:"long"})}, ${lunarText}${holiday ? `, ${holiday.name}` : ""}, 일정 ${dayEvents.length}개`;
+    const titles = visibleEvents.map(event => `<span class="calendar-event-title" title="${esc(event.title)}">${esc(event.title)}</span>`).join("");
+    const more = dayEvents.length > 2 ? `<span class="calendar-more">+${dayEvents.length-2}개</span>` : "";
+    cells.push(`<button type="button" class="${classes}" data-calendar-date="${iso}" aria-label="${esc(label)}">
+      <span class="calendar-day-number">${date.getDate()}</span>
+      ${lunarText ? `<span class="calendar-lunar-date">${lunarText}</span>` : ""}
+      ${holiday ? `<span class="calendar-holiday-label">${esc(holiday.name)}</span>` : ""}
+      <span class="calendar-event-titles">${titles}${more}</span>
+    </button>`);
+  }
+  $("calendarGrid").innerHTML = cells.join("");
+  const dayEvents = eventsForDate(selectedDate);
+  const holiday = holidayInfo(selectedDate);
+  $("calendarDayTitle").textContent = `${fmtDate(selectedDate,{year:"numeric",month:"long",day:"numeric",weekday:"long"})} · ${lunarLabel(selectedDate)}${holiday ? ` · ${holiday.name}` : ""}`;
+  $("calendarDayTitle").classList.toggle("holiday-text", holiday?.type === "public" || parseISO(selectedDate).getDay() === 0);
+  $("calendarDayCount").textContent = `${dayEvents.length}개 일정`;
+  $("calendarDayList").innerHTML = dayEvents.length ? dayEvents.map(event => `
+    <button type="button" class="calendar-event-row" data-edit-event="${esc(event.id)}">
+      <span class="calendar-event-time">${esc(event.time || "시간 미정")}</span>
+      <span class="calendar-event-copy"><strong>${esc(event.title)}</strong><small>${esc([event.place,event.memo,event.repeat && event.repeat !== "없음" ? `반복 ${event.repeat}` : ""].filter(Boolean).join(" · ") || "일정 내용 보기 및 수정")}</small></span>
+      <span class="calendar-event-chevron">›</span>
+    </button>`).join("") : `<div class="empty">이 날짜에는 등록된 일정이 없어요.</div>`;
+}
+
+function shiftCalendarMonth(amount) {
+  calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth()+amount, 1, 12);
+  selectedDate = isoDate(calendarMonth);
+  render();
+}
+function closeFormDialog(dialogId, returnFocusId) {
+  const dialog = $(dialogId);
+  const active = document.activeElement;
+  if (active && dialog.contains(active) && typeof active.blur === "function") active.blur();
+  dialog.close();
+  requestAnimationFrame(() => $(returnFocusId)?.focus({preventScroll:true}));
 }
 function openNewEvent() {
   editingEventId = null;
@@ -268,8 +416,9 @@ $("scheduleForm").addEventListener("submit", e => {
     : [...events, item];
   if (persist(nextEvents, tasks)) {
     selectedDate = date;
+    calendarMonth = new Date(parseISO(date).getFullYear(), parseISO(date).getMonth(), 1, 12);
     render();
-    $("scheduleDialog").close();
+    closeFormDialog("scheduleDialog", "addScheduleBtn");
     showToast(wasEditing ? "일정을 수정했어요." : "일정을 저장했어요.");
   }
 });
@@ -314,7 +463,7 @@ $("taskForm").addEventListener("submit", e => {
   if (persist(events, nextTasks)) {
     selectedDate = date;
     render();
-    $("taskDialog").close();
+    closeFormDialog("taskDialog", "addTaskBtn");
     showToast(wasEditing ? "할 일을 수정했어요." : "할 일을 추가했어요.");
   }
 });
@@ -341,6 +490,19 @@ function shiftDate(amount) {
 $("prevDay").addEventListener("click", () => shiftDate(-1));
 $("nextDay").addEventListener("click", () => shiftDate(1));
 $("todayBtn").addEventListener("click", () => { selectedDate = todayISO(); render(); });
+$("prevMonthBtn").addEventListener("click", () => shiftCalendarMonth(-1));
+$("nextMonthBtn").addEventListener("click", () => shiftCalendarMonth(1));
+$("calendarGrid").addEventListener("click", e => {
+  const day = e.target.closest("[data-calendar-date]");
+  if (!day) return;
+  selectedDate = day.dataset.calendarDate;
+  calendarMonth = new Date(parseISO(selectedDate).getFullYear(), parseISO(selectedDate).getMonth(), 1, 12);
+  render();
+});
+$("calendarDayList").addEventListener("click", e => {
+  const row = e.target.closest("[data-edit-event]");
+  if (row) openEditEvent(row.dataset.editEvent);
+});
 
 function renderAllEvents() {
   const upcoming = [];
@@ -509,15 +671,27 @@ $("voiceBtn").addEventListener("click", () => {
 });
 
 document.querySelectorAll(".nav-item").forEach(button => button.addEventListener("click", () => {
+  const tab = button.dataset.tab;
   document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
   button.classList.add("active");
-  if (button.dataset.tab === "schedule") window.scrollTo({top:0,behavior:"smooth"});
-  if (button.dataset.tab === "tasks") {
-    $("taskList").scrollIntoView({behavior:"smooth",block:"center"});
-    $("addTaskBtn").focus();
+  if (["schedule","tasks","calendar"].includes(tab)) {
+    $("homeView").classList.toggle("hidden", tab === "calendar");
+    $("calendarView").classList.toggle("hidden", tab !== "calendar");
   }
-  if (button.dataset.tab === "voice") $("voiceBtn").click();
-  if (button.dataset.tab === "settings") $("settingsDialog").showModal();
+  if (tab === "schedule") window.scrollTo({top:0,behavior:"smooth"});
+  if (tab === "tasks") {
+    $("taskList").scrollIntoView({behavior:"smooth",block:"center"});
+  }
+  if (tab === "calendar") {
+    calendarMonth = new Date(parseISO(selectedDate).getFullYear(), parseISO(selectedDate).getMonth(), 1, 12);
+    renderCalendar();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  if (tab === "voice") $("voiceBtn").click();
+  if (tab === "settings") {
+    renderReminderPreview();
+    $("settingsDialog").showModal();
+  }
 }));
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
