@@ -261,7 +261,7 @@ function render() {
   $("todoCount").textContent = dayTasks.filter(task => !task.done).length;
   $("doneCount").textContent = dayTasks.filter(task => task.done).length;
 
-  $("scheduleList").innerHTML = dayEvents.length ? dayEvents.map(event => `
+  $("scheduleList").innerHTML = dayEvents.length ? dayEvents.slice(0,3).map(event => `
     <div class="schedule-item">
       <div class="event-time">${esc(event.time || "시간 미정")}</div>
       <div class="event-bar"></div>
@@ -272,12 +272,22 @@ function render() {
       <button class="more-button" data-edit-event="${esc(event.id)}" aria-label="일정 수정">···</button>
     </div>`).join("") : `<div class="empty">이 날짜에는 등록된 일정이 없어요.<br>새 일정을 추가해 보세요.</div>`;
 
-  $("taskList").innerHTML = dayTasks.length ? dayTasks.map(task => `
+  $("taskList").innerHTML = dayTasks.length ? dayTasks.slice(0,3).map(task => `
     <div class="task-row ${task.done ? "done" : ""}">
       <input type="checkbox" data-toggle-task="${esc(task.id)}" aria-label="할 일 완료" ${task.done ? "checked" : ""}>
       <button class="task-title-button" data-edit-task="${esc(task.id)}">${esc(task.title)}</button>
       <button class="task-more" data-edit-task="${esc(task.id)}" aria-label="할 일 수정">···</button>
     </div>`).join("") : `<div class="empty">등록된 할 일이 없어요.<br>오늘 할 일을 하나 추가해 볼까요?</div>`;
+  const progress = $("taskProgress");
+  if (progress) progress.textContent = `${dayTasks.filter(task => task.done).length}/${dayTasks.length}`;
+  const brief = $("upcomingBrief");
+  if (brief) {
+    const nextEvent = events.filter(event => occursOn(event, todayISO()) && (event.date > todayISO() || (event.date === todayISO() && (event.time || "23:59") >= new Date().toTimeString().slice(0,5))))
+      .sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time))[0];
+    brief.innerHTML = nextEvent
+      ? `<div class="upcoming-title">🔔 다가오는 일정 안내</div><p><strong>${esc(nextEvent.title)}</strong> · ${nextEvent.date === todayISO() ? "오늘" : fmtDate(nextEvent.date,{month:"numeric",day:"numeric"})} ${esc(nextEvent.time || "시간 미정")}</p><small>${esc(nextEvent.place || "일정을 미리 확인해 보세요.")}</small>`
+      : `<div class="upcoming-title">🔔 다가오는 일정 안내</div><p>예정된 일정이 없어요. 여유로운 하루 보내세요.</p>`;
+  }
   renderCalendar();
 }
 function isoDate(date) {
