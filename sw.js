@@ -1,4 +1,4 @@
-const CACHE = "haru-static-v1-3-modern-forest";
+const CACHE = "haru-static-v2-0-premium-sage-ivory";
 const FILES = ["./","./index.html","./styles.css","./app.js","./lunar-data.js","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)));
