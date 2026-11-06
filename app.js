@@ -255,6 +255,8 @@ function render() {
   $("selectedDate").value = selectedDate;
   $("weekdayLabel").textContent = `${fmtDate(selectedDate, {weekday:"long",month:"long",day:"numeric"})} · ${lunarLabel(selectedDate)}`;
   $("todayLabel").textContent = selectedDate === todayISO() ? "오늘의 하루" : fmtDate(selectedDate);
+  const lunar = lunarLabel(selectedDate);
+  $("scheduleHeadingDate").textContent = `${fmtDate(selectedDate,{month:"long",day:"numeric",weekday:"short"})} · ${lunar}`;
   const dayEvents = eventsForDate(selectedDate);
   const dayTasks = tasks.filter(task => task.date === selectedDate);
   $("scheduleCount").textContent = dayEvents.length;
@@ -267,7 +269,7 @@ function render() {
       <div class="event-bar"></div>
       <div class="event-main">
         <strong>${esc(event.title)}</strong>
-        <small>${esc([event.place, event.memo, event.repeat && event.repeat !== "없음" ? `반복 ${event.repeat}` : ""].filter(Boolean).join(" · "))}</small>
+        <small>${esc([event.place, event.repeat && event.repeat !== "없음" ? `반복 ${event.repeat}` : ""].filter(Boolean).join(" · "))}</small>
       </div>
       <button class="more-button" data-edit-event="${esc(event.id)}" aria-label="일정 수정">···</button>
     </div>`).join("") : `<div class="empty">이 날짜에는 등록된 일정이 없어요.<br>새 일정을 추가해 보세요.</div>`;
@@ -696,14 +698,14 @@ document.querySelectorAll(".nav-item").forEach(button => button.addEventListener
     $("homeView").classList.toggle("hidden", tab === "calendar");
     $("calendarView").classList.toggle("hidden", tab !== "calendar");
   }
-  if (tab === "schedule") window.scrollTo({top:0,behavior:"smooth"});
+  if (tab === "schedule") { document.querySelector(".assistant-content")?.scrollTo({top:0,behavior:"instant"}); }
   if (tab === "tasks") {
     $("taskList").scrollIntoView({behavior:"smooth",block:"center"});
   }
   if (tab === "calendar") {
     calendarMonth = new Date(parseISO(selectedDate).getFullYear(), parseISO(selectedDate).getMonth(), 1, 12);
     renderCalendar();
-    window.scrollTo({top:0,behavior:"smooth"});
+    document.querySelector(".assistant-content")?.scrollTo({top:0,behavior:"instant"});
   }
   if (tab === "voice") $("voiceBtn").click();
   if (tab === "settings") {

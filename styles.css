@@ -704,3 +704,58 @@ html,body{background:#F9F1E3}
 /* iPhone keyboard may reduce viewport; dialog remains scrollable and save button reachable */
 #scheduleDialog.modal{max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 12px);overflow-y:auto;}
 @media(max-height:820px){.home-view{gap:5px}.home-view .assistant-card{padding:8px 11px}.assistant-voice{min-height:51px}.upcoming-card{min-height:57px}}
+
+
+/* v3.1: original reference layout, isolated final overrides */
+html,body{height:100%;min-height:100%;overflow:hidden;background:#f8eddb}
+body{overscroll-behavior:none}
+.app-shell.assistant-shell{height:100dvh;min-height:0;max-height:100dvh;display:flex;flex-direction:column;overflow:hidden;padding:0!important;background:linear-gradient(140deg,#fff6e9,#f8ecd9 70%,#fff8ee)}
+.assistant-header{flex:0 0 auto!important;padding:calc(8px + env(safe-area-inset-top)) 18px 2px!important;background:transparent!important;border-radius:0!important;overflow:visible!important}
+.assistant-header .topline{height:36px!important}.assistant-header .brand{font-size:29px!important}
+.greeting-scene{height:99px!important;min-height:99px!important;display:flex;align-items:center;justify-content:space-between;overflow:visible}
+.assistant-greeting{font-size:16px!important;line-height:1.55!important;flex:1;white-space:nowrap}
+.assistant-mascot-art{width:170px!important;height:108px!important;flex:0 0 170px!important;object-fit:contain!important;transform:none!important;margin-right:-14px!important;filter:none!important}
+.assistant-date.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.assistant-content{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding:3px 13px 10px!important;overscroll-behavior:contain;scrollbar-width:none}
+.home-view{display:flex!important;flex-direction:column!important;gap:9px!important}
+.assistant-voice{min-height:64px!important;height:64px!important;margin:0!important;border-radius:30px!important;box-shadow:0 5px 14px #6f5a3822!important}
+.mic-orb{width:51px!important;height:51px!important;font-size:25px!important;background:linear-gradient(135deg,#78943e,#3d6029)!important;color:white!important}
+.assistant-voice strong{font-size:16px!important}.assistant-voice small{font-size:12px!important}
+.voice-note{display:none!important}
+.home-view .assistant-card{padding:12px 14px 10px!important;border-radius:24px!important;overflow:hidden!important;flex:none!important;box-shadow:0 4px 13px #9b7c5422!important}
+.home-view .assistant-card-head{margin:0 0 4px!important}.assistant-card-head h2{font-size:18px!important}
+.schedule-card .compact-date{display:flex!important;align-items:center;gap:5px;margin:0 0 2px!important;height:28px;justify-content:center}
+.schedule-card .compact-date .date-arrow{width:25px!important;height:25px!important;font-size:17px!important;border-radius:8px!important}
+.schedule-card #selectedDate{flex:0 1 145px!important;text-align:center;font-size:12px!important;min-width:0!important;padding:0!important;margin:0!important;background:transparent!important}
+.schedule-card .today-button{font-size:10px!important;padding:3px 7px!important}
+.home-view .assistant-card .schedule-list,.home-view .assistant-card .task-card{max-height:none!important;overflow:visible!important}
+.schedule-item{grid-template-columns:50px 3px minmax(0,1fr) 21px!important;gap:7px!important;padding:5px 0!important;min-height:36px!important}
+.event-bar{height:23px!important}.event-time{font-size:12px!important}
+.event-main strong{font-size:14px!important}.event-main small{font-size:10px!important;margin-top:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.home-view .assistant-card .event-main{max-width:none!important}.home-view .assistant-card .task-title-button{max-width:none!important}
+.home-view .assistant-card .inline-add{height:32px!important;min-height:32px!important;width:min(55%,220px)!important;margin:5px auto 0!important;font-size:13px!important}
+.task-row{min-height:35px!important;padding:4px 0!important}.task-row input[type=checkbox]{width:22px!important;height:22px!important;min-height:22px!important;flex:0 0 22px!important;aspect-ratio:1!important;border-radius:50%!important;padding:0!important;margin:0!important}
+.task-title-button{font-size:13px!important}
+.task-illustration{width:92px!important;height:92px!important;right:15px!important;bottom:35px!important;opacity:.8!important;pointer-events:none!important}
+.upcoming-card{min-height:75px!important;padding:10px 13px!important;border-radius:23px!important;flex:none!important}
+.upcoming-card .upcoming-title{font-size:15px!important}.upcoming-card p{font-size:12px!important;margin:5px 0!important}.blossom-art{width:70px!important;height:70px!important;opacity:.75!important}
+.assistant-stats{display:none!important}
+.bottom-nav{position:fixed!important;left:50%!important;bottom:0!important;transform:translateX(-50%)!important;top:auto!important;width:min(560px,100%)!important;height:calc(54px + env(safe-area-inset-bottom))!important;min-height:0!important;padding:5px 8px calc(4px + env(safe-area-inset-bottom))!important;z-index:99!important;background:#fff8ec!important;border-top:1px solid #e8dcc7!important}
+.nav-item{font-size:10px!important;gap:0!important}.nav-item span{font-size:22px!important;line-height:24px!important}
+.assistant-content{padding-bottom:calc(65px + env(safe-area-inset-bottom))!important}
+#scheduleDialog.modal{max-height:calc(100dvh - 20px)!important;overflow-y:auto!important;padding:12px 14px 8px!important}
+#scheduleForm label{margin:4px 0!important;font-size:11px!important}
+#scheduleForm input,#scheduleForm select,#scheduleForm textarea{margin-top:3px!important;padding:7px 9px!important;min-height:34px!important;font-size:14px!important}
+#scheduleForm textarea{height:38px!important;min-height:38px!important}
+#scheduleForm .reminder-panel{margin:5px 0!important;padding:6px 10px!important}
+#scheduleForm .reminder-check{min-height:28px!important;padding:2px 0!important}
+#scheduleForm .form-hint{display:none!important}
+#scheduleForm .modal-actions{position:sticky!important;bottom:0!important;background:#fffcf6!important}
+@media(max-height:760px){.greeting-scene{height:82px!important;min-height:82px!important}.assistant-mascot-art{height:90px!important;width:143px!important;flex-basis:143px!important}.assistant-voice{height:56px!important;min-height:56px!important}.home-view{gap:6px!important}.home-view .assistant-card{padding:8px 12px!important}.upcoming-card{min-height:62px!important}}
+
+/* 3.1.1: original mockup date next to schedule heading, with lunar date */
+.schedule-card .assistant-card-head{display:flex!important;align-items:center;gap:6px;flex-wrap:nowrap}
+.schedule-card .assistant-card-head h2{flex-shrink:0;font-size:16px!important}
+.schedule-heading-date{font-size:11px;font-weight:750;color:#74805c;white-space:nowrap;letter-spacing:-.5px;min-width:0}
+.schedule-card .assistant-card-head .text-button{margin-left:auto;flex-shrink:0;padding:5px 7px!important;font-size:11px!important}
+@media(max-width:390px){.schedule-card .assistant-card-head h2{font-size:15px!important}.schedule-heading-date{font-size:10px}}
