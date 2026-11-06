@@ -512,3 +512,53 @@ html,body{background:#F7F3EA;color:var(--ink)}
 /* On the compact home, the screen itself stays still; longer lists are opened via 전체보기. */
 @media(max-height:780px){.assistant-header{padding-top:calc(7px + env(safe-area-inset-top));padding-bottom:5px}.assistant-greeting{font-size:13px;margin:4px 0 2px}.home-view{gap:5px}.assistant-voice{min-height:50px}.mic-orb{width:34px;height:34px}.assistant-card{padding:7px 9px}.schedule-list{max-height:92px}.schedule-item{padding:4px 1px}.task-card{max-height:75px}.inline-add{height:27px;margin-top:4px}.upcoming-card{min-height:52px;padding:7px 10px}}
 @media(min-width:600px){.app-shell.assistant-shell{height: min(100svh,960px);margin:0 auto;box-shadow:0 0 45px #6C5A3210}}
+
+/* 하루 2.2 — readability and viewport utilization; preserves existing features */
+html,body{width:100%;min-height:100%;overflow-x:hidden}
+.app-shell.assistant-shell{height:100dvh;min-height:100svh;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+.assistant-header{padding:calc(12px + env(safe-area-inset-top)) 20px 12px}
+.assistant-header .brand{font-size:32px}
+.assistant-greeting{font-size:18px;line-height:1.5;margin:10px 0 6px}
+.assistant-date span{font-size:12px;letter-spacing:0}
+.assistant-date strong{font-size:14px}
+.compact-date .date-arrow{width:34px;height:34px;font-size:22px}
+.compact-date #selectedDate{font-size:15px}
+.compact-date .today-button{font-size:12px;padding:7px 11px}
+.assistant-content{padding:12px 14px 10px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.assistant-content::-webkit-scrollbar{display:none}
+.home-view{height:auto;min-height:100%;gap:10px}
+.assistant-voice{min-height:68px;padding:10px 13px}
+.mic-orb{width:46px;height:46px;font-size:22px}
+.assistant-voice strong{font-size:16px}
+.assistant-voice small{font-size:12px}
+.voice-note{font-size:11px;min-height:13px;margin:-5px 3px 0}
+.assistant-card{padding:13px 13px 12px;border-radius:19px}
+.assistant-card-head{margin-bottom:8px}
+.assistant-card-head h2{font-size:17px}
+.assistant-card-head .text-button,.task-progress{font-size:12px}
+.schedule-list{max-height:clamp(80px,15dvh,160px);overflow-y:auto}
+.schedule-list .empty,.task-card .empty{font-size:12px;padding:12px 4px;line-height:1.55}
+.schedule-item{padding:8px 1px;grid-template-columns:62px 4px minmax(0,1fr) 20px}
+.event-time{font-size:13px}.event-main strong{font-size:14px}.event-main small{font-size:11px}
+.task-card{max-height:clamp(72px,13dvh,140px);overflow-y:auto}
+.task-row{padding:7px 0}.task-title-button{font-size:13px}
+.inline-add{height:39px;width:min(58%,220px);font-size:14px;margin-top:9px}
+.inline-add span{font-size:18px}
+.upcoming-card{flex:1 0 auto;max-height:none;min-height:80px;padding:12px 14px}
+.upcoming-title{font-size:14px;margin-bottom:6px}
+.upcoming-card p{font-size:13px;line-height:1.5}
+.upcoming-card small{font-size:11px}
+.bottom-nav{height:calc(76px + env(safe-area-inset-bottom));padding:9px 8px calc(9px + env(safe-area-inset-bottom))}
+.nav-item{font-size:11px;gap:3px}.nav-item span{font-size:25px;line-height:28px}
+@media(max-height:760px){
+ .assistant-header{padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:6px}
+ .assistant-greeting{font-size:17px;margin:4px 0 3px}
+ .assistant-content{padding-top:8px}
+ .home-view{gap:6px}
+ .assistant-voice{min-height:56px;padding:6px 11px}
+ .mic-orb{width:38px;height:38px}
+ .assistant-card{padding:8px 11px}
+ .schedule-list .empty,.task-card .empty{padding:7px 3px}
+ .inline-add{height:34px;margin-top:5px}
+ .upcoming-card{min-height:60px;padding:8px 11px}
+}
