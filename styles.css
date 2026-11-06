@@ -622,3 +622,58 @@ html,body{background:#F9F1E3}
 .bottom-nav{height:calc(73px + env(safe-area-inset-bottom));background:#FFF9EF;border-top-color:#E9DCC8}.nav-item{font-size:11px}.nav-item span{font-size:25px}.nav-item.active{color:#47612F}
 @media(max-height:820px){.assistant-header{padding-top:calc(5px + env(safe-area-inset-top));padding-bottom:5px}.greeting-scene{min-height:62px}.assistant-mascot{transform:scale(.86);transform-origin:right center}.assistant-greeting{font-size:16px!important}.home-view{gap:7px}.assistant-voice{min-height:55px}.home-view .assistant-card{padding:9px 12px 10px}.home-view .assistant-card .empty{padding:7px 3px}.home-view .assistant-card .inline-add{height:33px;min-height:33px}.upcoming-card{min-height:65px;padding:9px 12px}}
 @media(max-width:370px){.assistant-mascot{flex-basis:66px;transform:scale(.8)}.assistant-greeting{font-size:15px!important}.assistant-card-head h2{font-size:16px}}
+
+/* 2.4 — compact schedule editor, preserve readable iPhone controls */
+#scheduleDialog.modal{width:min(94vw,460px);max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 18px);padding:16px 17px 12px;overflow-y:auto;overscroll-behavior:contain;background:#FFFCF6}
+#scheduleForm{display:flex;flex-direction:column;gap:0}
+#scheduleForm .modal-head{margin-bottom:5px}
+#scheduleForm .modal-head h2{font-size:21px}
+#scheduleForm .modal-head .eyebrow{font-size:9px;margin-bottom:2px}
+#scheduleForm label{margin:5px 0;font-size:12px;line-height:1.3}
+#scheduleForm input:not([type=checkbox]),#scheduleForm textarea,#scheduleForm select{display:block;margin-top:4px;min-height:39px;padding:8px 10px;border-radius:11px;font-size:16px}
+#scheduleForm textarea{height:52px;min-height:52px;resize:none}
+#scheduleForm .form-grid{gap:9px}
+#scheduleForm .reminder-panel{margin:7px 0 5px;padding:8px 11px 5px;border-radius:12px}
+#scheduleForm .reminder-panel-title{font-size:12px;margin-bottom:4px}
+#scheduleForm .reminder-panel-title span{font-size:10px;padding:2px 7px}
+#scheduleForm .reminder-check{display:flex;align-items:center;gap:9px;margin:0;padding:5px 0;min-height:36px}
+#scheduleForm .reminder-check input[type=checkbox]{appearance:auto;-webkit-appearance:checkbox;display:block;width:19px;height:19px;min-height:19px;flex:0 0 19px;padding:0;margin:0;accent-color:#587A49}
+#scheduleForm .reminder-check span{display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:3px 8px}
+#scheduleForm .reminder-check strong{font-size:12px}
+#scheduleForm .reminder-check small{font-size:10px}
+#scheduleForm .form-hint{font-size:10px;line-height:1.3;margin:4px 0;color:#737C70}
+#scheduleForm .modal-actions{position:sticky;bottom:-12px;z-index:2;background:#FFFCF6;padding:6px 0 8px;margin-top:4px}
+#scheduleForm .modal-actions .primary-button{min-height:44px;font-size:15px;background:#5C7545}
+#scheduleForm .modal-actions .secondary-button{min-height:44px}
+@media(max-height:740px){#scheduleDialog.modal{padding:12px 14px 8px}#scheduleForm .reminder-check small{display:none}#scheduleForm textarea{height:42px;min-height:42px}#scheduleForm .modal-head{margin-bottom:2px}#scheduleForm label{margin:3px 0}#scheduleForm .reminder-check{min-height:31px;padding:3px 0}}
+/* Home screen: header flows away on scroll instead of hiding schedule items */
+.app-shell.assistant-shell{overflow:visible}
+.assistant-content{overscroll-behavior:contain}
+/* Normal-sized task circles, including when global input rules apply */
+.home-view .task-row input[type=checkbox]{appearance:none;-webkit-appearance:none;width:21px;height:21px;min-width:21px;min-height:21px;flex:0 0 21px;padding:0;margin:0;border-radius:50%}
+
+/* Haru 3.0: illustration-led original concept */
+.assistant-header{position:relative;z-index:0;overflow:hidden;padding-top:calc(14px + env(safe-area-inset-top));padding-bottom:10px}
+.greeting-scene{min-height:112px;align-items:center;position:relative}
+.assistant-mascot-art{width:160px;height:119px;object-fit:contain;flex:0 0 160px;margin-right:-7px;filter:drop-shadow(0 5px 8px #87785e30)}
+.assistant-greeting{font-size:17px!important;max-width:55%;position:relative;z-index:1}
+.home-view .assistant-card{position:relative;isolation:isolate;overflow:hidden;padding-bottom:12px}
+.home-view .assistant-card-head,.home-view .assistant-card .inline-add{position:relative;z-index:2}
+.card-illustration{position:absolute;right:10px;bottom:42px;width:112px;height:112px;object-fit:contain;z-index:0;pointer-events:none;opacity:.92}
+.home-view .assistant-card .schedule-list,.home-view .assistant-card .task-card{position:relative;z-index:1;padding-right:0}
+.home-view .assistant-card .schedule-item,.home-view .assistant-card .task-row{padding-right:0}
+.home-view .assistant-card .event-main,.home-view .assistant-card .task-title-button{max-width:calc(100% - 83px)}
+.home-view .assistant-card .inline-add{width:min(70%,245px)}
+.upcoming-card{position:relative;padding-right:105px;overflow:hidden;min-height:82px}
+.blossom-art{position:absolute;right:3px;top:50%;transform:translateY(-50%);width:104px;height:76px;pointer-events:none}
+#scheduleDialog.modal{max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 12px)}
+#scheduleForm .form-hint{font-size:10px;line-height:1.25}
+#scheduleForm .modal-actions{position:sticky;bottom:-12px;z-index:3;background:#fffcf6;padding:7px 0 calc(5px + env(safe-area-inset-bottom));box-shadow:0 -6px 12px #fffcf6}
+#scheduleForm .reminder-panel .reminder-check small{display:none}
+@media(max-height:820px){.greeting-scene{min-height:84px}.assistant-mascot-art{width:123px;height:94px;flex-basis:123px}.card-illustration{width:85px;height:85px;bottom:37px}.upcoming-card{min-height:66px}}
+@media(max-width:370px){.assistant-mascot-art{width:108px;height:90px;flex-basis:108px}.assistant-greeting{font-size:15px!important}.card-illustration{width:76px;height:76px}}
+
+/* 3.0.1 — shift the main screen downward without covering the bottom navigation. */
+.assistant-header{padding-top:calc(27px + env(safe-area-inset-top));}
+.assistant-content{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+@media(max-height:780px){.assistant-header{padding-top:calc(20px + env(safe-area-inset-top));}}

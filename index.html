@@ -12,13 +12,13 @@
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="stylesheet" href="./styles.css">
   <script src="./lunar-data.js"></script>
-  <title>하루 2.2.1 - 나의 개인비서</title>
+  <title>하루 3.0 - 나의 개인비서</title>
 </head>
 <body>
   <main class="app-shell assistant-shell">
     <header class="assistant-header">
       <div class="topline"><div class="brand"><span class="brand-leaf">🌿</span> 하루</div><button class="icon-button" id="settingsBtn" aria-label="설정">⚙</button></div>
-      <div class="greeting-scene"><p class="assistant-greeting">안녕하세요!<br><strong>오늘도 좋은 하루 되세요 😊</strong></p><div class="assistant-mascot" aria-hidden="true"><span class="mascot-sprout">🌱</span><span class="mascot-face">ᴗ ◡ ᴗ</span><span class="mascot-heart">♥</span></div></div>
+      <div class="greeting-scene"><p class="assistant-greeting">안녕하세요!<br><strong>오늘도 좋은 하루 되세요 😊</strong></p><img class="assistant-mascot-art" src="./robot.svg" alt="" aria-hidden="true"></div>
       <div class="assistant-date"><span id="weekdayLabel">TODAY</span><strong id="todayLabel">오늘의 하루</strong></div>
       <div class="date-control compact-date"><button id="prevDay" class="date-arrow" aria-label="전날">‹</button><input type="date" id="selectedDate" aria-label="일정 날짜"><button id="nextDay" class="date-arrow" aria-label="다음날">›</button><button id="todayBtn" class="today-button">오늘</button></div>
     </header>
@@ -26,17 +26,17 @@
       <div class="home-view" id="homeView">
         <button class="voice-button assistant-voice" id="voiceBtn"><span class="mic-orb">🎙️</span><span><strong>음성으로 일정 추가하기</strong><small>“내일 오전 10시 회의”</small></span><b>›</b></button>
         <p class="voice-note" id="voiceNote">말로 편하게 일정을 등록해 보세요.</p>
-        <section class="assistant-card schedule-card">
+        <section class="assistant-card schedule-card"><img class="card-illustration calendar-illustration" src="./calendar-art.svg" alt="" aria-hidden="true">
           <div class="assistant-card-head"><h2>▦ 오늘의 일정</h2><button class="text-button" id="showAllBtn">전체보기 ›</button></div>
           <div id="scheduleList" class="schedule-list"></div>
           <button class="inline-add schedule-add" id="addScheduleBtn" type="button"><span>▦</span> 일정 추가</button>
         </section>
-        <section class="assistant-card task-card-wrap">
+        <section class="assistant-card task-card-wrap"><img class="card-illustration task-illustration" src="./tasks-art.svg" alt="" aria-hidden="true">
           <div class="assistant-card-head"><h2>✓ 오늘의 할 일</h2><span class="task-progress" id="taskProgress">0/0</span></div>
           <div class="task-card" id="taskList"></div>
           <button class="inline-add task-add" id="addTaskBtn" type="button"><span>＋</span> 할 일 추가</button>
         </section>
-        <section class="upcoming-card" id="upcomingBrief"><div class="upcoming-title">🔔 다가오는 일정 안내</div><p>등록된 일정을 확인하고 있어요.</p></section>
+        <section class="upcoming-card" id="upcomingBrief"><img class="blossom-art" src="./blossom.svg" alt="" aria-hidden="true"><div class="upcoming-title">🔔 다가오는 일정 안내</div><p>등록된 일정을 확인하고 있어요.</p></section>
         <div class="assistant-stats" aria-label="오늘의 요약"><span><b id="scheduleCount">0</b> 일정</span><span><b id="todoCount">0</b> 남은 할 일</span><span><b id="doneCount">0</b> 완료</span></div>
       </div>
       <section class="calendar-view hidden" id="calendarView" aria-labelledby="calendarMonthLabel">
