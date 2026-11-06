@@ -562,3 +562,35 @@ html,body{width:100%;min-height:100%;overflow-x:hidden}
  .inline-add{height:34px;margin-top:5px}
  .upcoming-card{min-height:60px;padding:8px 11px}
 }
+
+/* 2.2.1 — iPhone home layout: prevent card/button overlap */
+.app-shell.assistant-shell{padding-bottom:calc(76px + env(safe-area-inset-bottom));overflow:hidden}
+.assistant-header{flex-shrink:0}
+.assistant-header .brand{font-size:35px;font-weight:850}
+.assistant-greeting{font-size:20px;font-weight:700;line-height:1.43}
+.assistant-greeting strong{font-weight:850}
+.assistant-date span{font-size:13px;font-weight:700;color:#77705E}
+.assistant-date strong{font-size:15px;font-weight:800}
+.compact-date #selectedDate{font-size:17px;font-weight:800}
+.assistant-content{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-bottom:14px;-webkit-overflow-scrolling:touch}
+.home-view{height:auto;min-height:0;gap:10px;display:flex;flex-direction:column}
+.assistant-card{flex:0 0 auto;min-height:max-content;overflow:visible;display:flex;flex-direction:column}
+.assistant-card-head{flex:0 0 auto}
+.schedule-list,.task-card{flex:0 1 auto;min-height:0;overflow-y:auto}
+.inline-add{position:relative;z-index:1;display:flex;flex:0 0 40px;align-items:center;justify-content:center;width:min(68%,240px);height:40px;min-height:40px;margin:10px auto 0;padding:0 12px;opacity:1;visibility:visible;color:#59633A;background:#EAE8D1;border:1px solid #DCD9B9;border-radius:13px;font-size:14px;font-weight:800;transform:none}
+.upcoming-card{flex:0 0 auto;min-height:78px;max-height:none}
+.bottom-nav{z-index:10}
+@media(max-height:780px){.assistant-header .brand{font-size:32px}.assistant-greeting{font-size:18px}.home-view{gap:7px}.assistant-card{padding:10px 12px}.inline-add{flex-basis:36px;height:36px;min-height:36px;margin-top:7px}.upcoming-card{min-height:65px}}
+
+/* 2.2.2 — compact, accessible layout with independent add actions */
+.assistant-header .brand{font-size:36px;font-weight:850}
+.assistant-greeting{font-size:20px;font-weight:750;letter-spacing:-.35px}
+.assistant-greeting strong{font-weight:850}
+.assistant-date span{font-size:14px;font-weight:750}
+.assistant-date strong{font-size:15px;font-weight:850}
+.compact-date #selectedDate{font-size:17px;font-weight:850}
+.assistant-card{position:relative;flex-shrink:0;overflow:visible}
+.assistant-card .inline-add{position:static;flex-shrink:0;display:flex;align-self:center;opacity:1;visibility:visible;z-index:auto;margin:9px auto 0;min-height:40px;width:min(70%,240px)}
+.schedule-list,.task-card{flex-shrink:1;min-height:0}
+.upcoming-card{flex:0 0 auto}
+@media(max-height:780px){.assistant-header .brand{font-size:33px}.assistant-greeting{font-size:18px}.assistant-card .inline-add{min-height:36px;margin-top:7px}}
