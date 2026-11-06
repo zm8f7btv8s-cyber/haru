@@ -595,44 +595,30 @@ html,body{width:100%;min-height:100%;overflow-x:hidden}
 .upcoming-card{flex:0 0 auto}
 @media(max-height:780px){.assistant-header .brand{font-size:33px}.assistant-greeting{font-size:18px}.assistant-card .inline-add{min-height:36px;margin-top:7px}}
 
-/* 2.2.3 — keep add buttons fully INSIDE their cards (iPhone Safari) */
-.home-view > .assistant-card.schedule-card,
-.home-view > .assistant-card.task-card-wrap {
-  display:grid;
-  grid-template-columns:minmax(0,1fr);
-  grid-template-rows:auto minmax(0,auto) auto;
-  align-content:start;
-  height:auto;
-  min-height:0;
-  max-height:none;
-  padding:13px 13px 15px;
-  overflow:hidden;
-  flex:0 0 auto;
-}
-.home-view > .assistant-card .schedule-list,
-.home-view > .assistant-card .task-card {
-  width:100%;
-  min-height:0;
-  margin:0;
-  overflow-y:auto;
-}
-.home-view > .assistant-card .inline-add {
-  position:static;
-  display:flex;
-  box-sizing:border-box;
-  grid-row:3;
-  justify-self:center;
-  align-self:center;
-  flex:none;
-  width:min(70%,240px);
-  height:40px;
-  min-height:40px;
-  margin:10px 0 0;
-  padding:0 12px;
-  transform:none;
-}
-@media(max-height:780px){
-  .home-view > .assistant-card.schedule-card,
-  .home-view > .assistant-card.task-card-wrap {padding:10px 12px 12px}
-  .home-view > .assistant-card .inline-add {height:36px;min-height:36px;margin-top:7px}
-}
+/* 2.2.3 — keep add buttons fully INSIDE the schedule and task cards */
+.home-view .assistant-card{display:flex;flex-direction:column;box-sizing:border-box;height:auto;min-height:0;padding:14px 14px 16px;overflow:visible;gap:0}
+.home-view .assistant-card-head{flex:none;margin-bottom:5px}
+.home-view .assistant-card .schedule-list,.home-view .assistant-card .task-card{display:block;flex:none;height:auto;min-height:0;max-height:132px;overflow-y:auto;margin:0;padding:0}
+.home-view .assistant-card .empty{padding:14px 4px 12px;min-height:0;line-height:1.5}
+.home-view .assistant-card .inline-add{position:relative;inset:auto;transform:none;display:flex;flex:0 0 auto;align-self:center;box-sizing:border-box;height:40px;min-height:40px;width:min(70%,240px);margin:8px auto 0;padding:0 12px;border-radius:14px;z-index:0}
+.home-view .assistant-card + .assistant-card{margin-top:0}
+@media(max-height:780px){.home-view .assistant-card{padding:10px 12px 12px}.home-view .assistant-card .empty{padding:9px 3px}.home-view .assistant-card .inline-add{height:36px;min-height:36px;margin-top:7px}}
+
+/* 2.3 — reference-inspired warm personal assistant, responsive and functional */
+:root{--ivory:#F9F1E3;--ink:#2F3425;--muted:#817B6D;--forest:#465C30;--soft:#637844;--coral:#D76E65}
+html,body{background:#F9F1E3}
+.app-shell.assistant-shell{background:radial-gradient(ellipse at 80% 6%,#F3E5C7 0%,transparent 32%),linear-gradient(180deg,#F9F0DE,#FFF9EE);padding-bottom:calc(73px + env(safe-area-inset-bottom))}
+.assistant-header{background:radial-gradient(circle at 85% 35%,#E5E8C3 0%,transparent 27%),linear-gradient(130deg,#FFF4E3,#F5EAD5);padding:calc(8px + env(safe-area-inset-top)) 19px 8px;border-radius:0 0 25px 25px}
+.assistant-header .topline{height:40px}.assistant-header .brand{font-size:32px;font-weight:850;color:#334825}.assistant-header .brand-leaf{font-size:25px;margin-right:5px}.assistant-header .icon-button{font-size:24px;width:40px;height:40px;background:#FFF9EC;border-color:#E4D9BE;color:#435334}
+.greeting-scene{display:flex;align-items:center;justify-content:space-between;min-height:72px;gap:8px}.assistant-greeting{font-size:17px!important;font-weight:650;line-height:1.5;margin:5px 0!important;letter-spacing:-.5px}.assistant-greeting strong{font-weight:850;color:#263622}
+.assistant-mascot{position:relative;flex:0 0 82px;height:65px;display:grid;place-items:center;filter:drop-shadow(0 5px 7px #756D4633)}.mascot-face{display:grid;place-items:center;width:67px;height:52px;border:7px solid #FFFDF4;background:#3C3D2D;border-radius:24px;color:#F9EFCF;font-size:13px;font-weight:800;letter-spacing:-1px}.mascot-sprout{position:absolute;top:-14px;left:24px;font-size:25px}.mascot-heart{position:absolute;right:-2px;top:0;background:#FFF6EF;border-radius:50%;padding:3px 7px;color:#ED8B91;font-size:19px}
+.assistant-date{margin:1px 0 0}.assistant-date span{font-size:11px;font-weight:650}.assistant-date strong{font-size:12px}.compact-date{min-height:31px}.compact-date .date-arrow{width:29px;height:29px}.compact-date #selectedDate{font-size:14px}.compact-date .today-button{font-size:11px;padding:5px 9px}
+.assistant-content{padding:9px 14px 10px;overflow-y:auto}.home-view{gap:9px}
+.assistant-voice{min-height:61px;padding:7px 12px;border-radius:26px;background:linear-gradient(115deg,#FFFDF8,#F5EBD9);box-shadow:0 5px 12px #7E6D4630;border-color:#E5D9BD}.mic-orb{width:45px;height:45px;background:linear-gradient(145deg,#718B43,#405B2E);font-size:24px}.assistant-voice strong{font-size:15px}.assistant-voice small{font-size:11px}.voice-note{margin:-6px 2px 0;font-size:10px}
+.home-view .assistant-card{padding:12px 13px 13px;border-radius:24px;background:linear-gradient(135deg,#FFFDF8,#FFF8EE);border-color:#E8DCC4;box-shadow:0 5px 14px #A28B6020}.assistant-card-head h2{font-size:18px;font-weight:850}.assistant-card-head .text-button{font-size:12px;color:#C8685D;background:#FBE4DB;border-radius:18px;padding:5px 9px}.task-progress{font-size:13px}
+.home-view .assistant-card .empty{font-size:12px;color:#899589;padding:12px 3px 9px}.home-view .assistant-card .inline-add{height:37px;min-height:37px;width:min(64%,230px);margin-top:6px;background:linear-gradient(110deg,#EDEDD5,#E6E8C8);border:1px solid #D8D8AE;color:#4B5D33;border-radius:20px;font-size:14px;box-shadow:none}
+.schedule-item{grid-template-columns:57px 4px minmax(0,1fr) 20px;padding:7px 1px}.event-time{font-size:12px}.event-main strong{font-size:14px}.task-row{padding:6px 0}.task-title-button{font-size:13px}
+.upcoming-card{min-height:74px;padding:11px 14px;border-radius:23px;background:linear-gradient(115deg,#FCE2DD,#F9D8D3);border-color:#F2C9C2;box-shadow:0 5px 13px #CA8E8130}.upcoming-title{font-size:15px;color:#A84F49}.upcoming-card p{font-size:12px}.upcoming-card small{font-size:10px}
+.bottom-nav{height:calc(73px + env(safe-area-inset-bottom));background:#FFF9EF;border-top-color:#E9DCC8}.nav-item{font-size:11px}.nav-item span{font-size:25px}.nav-item.active{color:#47612F}
+@media(max-height:820px){.assistant-header{padding-top:calc(5px + env(safe-area-inset-top));padding-bottom:5px}.greeting-scene{min-height:62px}.assistant-mascot{transform:scale(.86);transform-origin:right center}.assistant-greeting{font-size:16px!important}.home-view{gap:7px}.assistant-voice{min-height:55px}.home-view .assistant-card{padding:9px 12px 10px}.home-view .assistant-card .empty{padding:7px 3px}.home-view .assistant-card .inline-add{height:33px;min-height:33px}.upcoming-card{min-height:65px;padding:9px 12px}}
+@media(max-width:370px){.assistant-mascot{flex-basis:66px;transform:scale(.8)}.assistant-greeting{font-size:15px!important}.assistant-card-head h2{font-size:16px}}
