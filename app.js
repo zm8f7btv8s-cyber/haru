@@ -267,7 +267,7 @@ function render() {
       <div class="event-bar"></div>
       <div class="event-main">
         <strong>${esc(event.title)}</strong>
-        <small>${esc([event.place, event.memo, event.repeat && event.repeat !== "없음" ? `반복 ${event.repeat}` : "", reminderSummary(event)].filter(Boolean).join(" · "))}</small>
+        <small>${esc([event.place, event.memo, event.repeat && event.repeat !== "없음" ? `반복 ${event.repeat}` : ""].filter(Boolean).join(" · "))}</small>
       </div>
       <button class="more-button" data-edit-event="${esc(event.id)}" aria-label="일정 수정">···</button>
     </div>`).join("") : `<div class="empty">이 날짜에는 등록된 일정이 없어요.<br>새 일정을 추가해 보세요.</div>`;
@@ -282,10 +282,18 @@ function render() {
   if (progress) progress.textContent = `${dayTasks.filter(task => task.done).length}/${dayTasks.length}`;
   const brief = $("upcomingBrief");
   if (brief) {
-    const nextEvent = events.filter(event => occursOn(event, todayISO()) && (event.date > todayISO() || (event.date === todayISO() && (event.time || "23:59") >= new Date().toTimeString().slice(0,5))))
-      .sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time))[0];
+    const now = new Date();
+    let nextEvent = null;
+    for (let offset = 0; offset < 90 && !nextEvent; offset++) {
+      const date = shiftISO(todayISO(), offset);
+      nextEvent = eventsForDate(date).find(event => {
+        const time = isValidTime(event.time) ? event.time : "23:59";
+        return makeLocalDate(date, ...time.split(":").map(Number)) >= now;
+      });
+      if (nextEvent) nextEvent = {...nextEvent, occurrenceDate:date};
+    }
     brief.innerHTML = nextEvent
-      ? `<div class="upcoming-title">🔔 다가오는 일정 안내</div><p><strong>${esc(nextEvent.title)}</strong> · ${nextEvent.date === todayISO() ? "오늘" : fmtDate(nextEvent.date,{month:"numeric",day:"numeric"})} ${esc(nextEvent.time || "시간 미정")}</p><small>${esc(nextEvent.place || "일정을 미리 확인해 보세요.")}</small>`
+      ? `<div class="upcoming-title">🔔 다가오는 일정 안내</div><p><strong>${esc(nextEvent.title)}</strong> · ${nextEvent.occurrenceDate === todayISO() ? "오늘" : fmtDate(nextEvent.occurrenceDate,{month:"numeric",day:"numeric"})} ${esc(nextEvent.time || "시간 미정")}</p><small>${esc(nextEvent.place || "일정을 미리 확인해 보세요.")}</small>`
       : `<div class="upcoming-title">🔔 다가오는 일정 안내</div><p>예정된 일정이 없어요. 여유로운 하루 보내세요.</p>`;
   }
   renderCalendar();

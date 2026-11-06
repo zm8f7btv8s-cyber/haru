@@ -677,3 +677,30 @@ html,body{background:#F9F1E3}
 .assistant-header{padding-top:calc(27px + env(safe-area-inset-top));}
 .assistant-content{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 @media(max-height:780px){.assistant-header{padding-top:calc(20px + env(safe-area-inset-top));}}
+
+/* 3.0.2 final layout: preserve approved top, slim bottom menu, compact readable lists */
+.app-shell.assistant-shell{padding-bottom:calc(53px + env(safe-area-inset-bottom));}
+.bottom-nav{height:calc(53px + env(safe-area-inset-bottom));padding:4px 7px calc(4px + env(safe-area-inset-bottom));box-sizing:border-box;align-items:center;}
+.nav-item{font-size:10px;gap:0;line-height:1.2;min-height:42px;justify-content:center;}
+.nav-item span{font-size:21px;line-height:23px;}
+.assistant-content{padding-bottom:8px;}
+.home-view{gap:6px;}
+.home-view .assistant-card{padding:9px 12px 10px;}
+.home-view .assistant-card-head{margin-bottom:3px;}
+.home-view .assistant-card .schedule-list,.home-view .assistant-card .task-card{max-height:none;overflow:visible;}
+.home-view .assistant-card .schedule-item{padding:5px 0;min-height:34px;grid-template-columns:54px 3px minmax(0,1fr) 24px;gap:8px;}
+.home-view .assistant-card .event-main{max-width:none;min-width:0;}
+.home-view .assistant-card .event-main strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.home-view .assistant-card .event-main small{display:none;}
+.home-view .assistant-card .task-row{padding:5px 0;min-height:32px;}
+.home-view .assistant-card .task-title-button{max-width:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;flex:1;}
+.home-view .task-row input[type=checkbox]{width:19px;height:19px;min-width:19px;min-height:19px;flex:0 0 19px;}
+.home-view .assistant-card .inline-add{height:32px;min-height:32px;margin-top:5px;font-size:13px;}
+.card-illustration{width:72px;height:72px;right:8px;bottom:37px;opacity:.55;z-index:0;}
+.home-view .assistant-card .schedule-list,.home-view .assistant-card .task-card{z-index:1;}
+.home-view .assistant-card .schedule-item,.home-view .assistant-card .task-row{position:relative;z-index:2;}
+.upcoming-card{min-height:62px;padding:8px 93px 8px 12px;}
+.blossom-art{width:85px;height:63px;}
+/* iPhone keyboard may reduce viewport; dialog remains scrollable and save button reachable */
+#scheduleDialog.modal{max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 12px);overflow-y:auto;}
+@media(max-height:820px){.home-view{gap:5px}.home-view .assistant-card{padding:8px 11px}.assistant-voice{min-height:51px}.upcoming-card{min-height:57px}}

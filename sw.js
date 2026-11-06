@@ -1,4 +1,4 @@
-const CACHE = "haru-static-v3-0-original-art";
+const CACHE = "haru-static-v3-0-2-final";
 const FILES = ["./","./index.html","./styles.css","./app.js","./lunar-data.js","./manifest.webmanifest","./icon-192.png","./icon-512.png","./robot.svg","./calendar-art.svg","./tasks-art.svg","./blossom.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)));
