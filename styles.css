@@ -594,3 +594,45 @@ html,body{width:100%;min-height:100%;overflow-x:hidden}
 .schedule-list,.task-card{flex-shrink:1;min-height:0}
 .upcoming-card{flex:0 0 auto}
 @media(max-height:780px){.assistant-header .brand{font-size:33px}.assistant-greeting{font-size:18px}.assistant-card .inline-add{min-height:36px;margin-top:7px}}
+
+/* 2.2.3 — keep add buttons fully INSIDE their cards (iPhone Safari) */
+.home-view > .assistant-card.schedule-card,
+.home-view > .assistant-card.task-card-wrap {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto minmax(0,auto) auto;
+  align-content:start;
+  height:auto;
+  min-height:0;
+  max-height:none;
+  padding:13px 13px 15px;
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.home-view > .assistant-card .schedule-list,
+.home-view > .assistant-card .task-card {
+  width:100%;
+  min-height:0;
+  margin:0;
+  overflow-y:auto;
+}
+.home-view > .assistant-card .inline-add {
+  position:static;
+  display:flex;
+  box-sizing:border-box;
+  grid-row:3;
+  justify-self:center;
+  align-self:center;
+  flex:none;
+  width:min(70%,240px);
+  height:40px;
+  min-height:40px;
+  margin:10px 0 0;
+  padding:0 12px;
+  transform:none;
+}
+@media(max-height:780px){
+  .home-view > .assistant-card.schedule-card,
+  .home-view > .assistant-card.task-card-wrap {padding:10px 12px 12px}
+  .home-view > .assistant-card .inline-add {height:36px;min-height:36px;margin-top:7px}
+}
